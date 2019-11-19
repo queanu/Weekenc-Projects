@@ -40,6 +40,9 @@ os.chdir('twitter_post')
 # Post images to twitter and have the bot sleep for 
 # specified amount i.e 30 seconds within a loop function
 for image in os.listdir('.'):
-    api.update_with_media(image)
-    time.sleep(30)
+    try:
+        api.update_with_media(image)
+        time.sleep(30)
+    except:
+        pass
     
