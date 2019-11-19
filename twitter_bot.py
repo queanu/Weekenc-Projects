@@ -16,9 +16,29 @@ api = tp.API(auth)
 # Create a directory if one is not created and populate with random images from specified url
 if not os.path.exists('twitter_post'):
     os.makedirs('twitter_post')
+    site = 'https://burst.shopify.com/coffee'
+    response = requests.get(site)
+    soup = BeautifulSoup(response.text, 'html.parser')
+    img_tags = soup.find_all('img')
+    os.chdir('twitter_post')
+    urls = [img['src'] for img in img_tags]
+
+    x = 0
+    for url in urls:
+        try:
+            with open('images-' + str(x) + '.jpg', 'wb') as f:
+                if 'http' not in url:
+                    url = '{}{}'.format(site, url)
+                f.write(requests.get(url).content)
+                f.close()
+                x += 1
+        except:
+            pass
+        
 os.chdir('twitter_post')
 
-# Post images to twitter and have the bot sleep for specified amount i.e 30 seconds
+# Post images to twitter and have the bot sleep for 
+# specified amount i.e 30 seconds within a loop function
 for image in os.listdir('.'):
     api.update_with_media(image)
     time.sleep(30)
